@@ -20,10 +20,11 @@ from __future__ import print_function
 
 import collections
 import random
-import tokenization
+import absl
+import bert.tokenization
 import tensorflow as tf
 
-flags = tf.flags
+flags = absl.flags
 
 FLAGS = flags.FLAGS
 
@@ -146,8 +147,8 @@ def write_instance_to_example_files(instances, tokenizer, max_seq_length,
     total_written += 1
 
     if inst_index < 20:
-      tf.logging.info("*** Example ***")
-      tf.logging.info("tokens: %s" % " ".join(
+      absl.logging.info("*** Example ***")
+      absl.logging.info("tokens: %s" % " ".join(
           [tokenization.printable_text(x) for x in instance.tokens]))
 
       for feature_name in features.keys():
@@ -157,13 +158,13 @@ def write_instance_to_example_files(instances, tokenizer, max_seq_length,
           values = feature.int64_list.value
         elif feature.float_list.value:
           values = feature.float_list.value
-        tf.logging.info(
+        absl.logging.info(
             "%s: %s" % (feature_name, " ".join([str(x) for x in values])))
 
   for writer in writers:
     writer.close()
 
-  tf.logging.info("Wrote %d total instances", total_written)
+  absl.logging.info("Wrote %d total instances", total_written)
 
 
 def create_int_feature(values):
@@ -434,7 +435,7 @@ def truncate_seq_pair(tokens_a, tokens_b, max_num_tokens, rng):
 
 
 def main(_):
-  tf.logging.set_verbosity(tf.logging.INFO)
+  absl.logging.set_verbosity(absl.logging.INFO)
 
   tokenizer = tokenization.FullTokenizer(
       vocab_file=FLAGS.vocab_file, do_lower_case=FLAGS.do_lower_case)
@@ -443,9 +444,9 @@ def main(_):
   for input_pattern in FLAGS.input_file.split(","):
     input_files.extend(tf.gfile.Glob(input_pattern))
 
-  tf.logging.info("*** Reading from input files ***")
+  absl.logging.info("*** Reading from input files ***")
   for input_file in input_files:
-    tf.logging.info("  %s", input_file)
+    absl.logging.info("  %s", input_file)
 
   rng = random.Random(FLAGS.random_seed)
   instances = create_training_instances(
@@ -454,9 +455,9 @@ def main(_):
       rng)
 
   output_files = FLAGS.output_file.split(",")
-  tf.logging.info("*** Writing to output files ***")
+  absl.logging.info("*** Writing to output files ***")
   for output_file in output_files:
-    tf.logging.info("  %s", output_file)
+    absl.logging.info("  %s", output_file)
 
   write_instance_to_example_files(instances, tokenizer, FLAGS.max_seq_length,
                                   FLAGS.max_predictions_per_seq, output_files)
@@ -466,4 +467,4 @@ if __name__ == "__main__":
   flags.mark_flag_as_required("input_file")
   flags.mark_flag_as_required("output_file")
   flags.mark_flag_as_required("vocab_file")
-  tf.app.run()
+  absl.app.run(main)

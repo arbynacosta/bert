@@ -22,9 +22,9 @@ import collections
 import csv
 import os
 import absl
-import modeling
-import optimization
-import tokenization
+import bert.modeling
+import bert.optimization
+import bert.tokenization
 
 flags = absl.flags
 
@@ -978,4 +978,4 @@ if __name__ == "__main__":
   flags.mark_flag_as_required("vocab_file")
   flags.mark_flag_as_required("bert_config_file")
   flags.mark_flag_as_required("output_dir")
-  tf.app.run()
+  absl.app.run(main)

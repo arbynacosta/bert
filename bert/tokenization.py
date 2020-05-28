@@ -22,6 +22,7 @@ import collections
 import re
 import unicodedata
 import six
+import absl
 import tensorflow as tf
 
 
@@ -96,7 +97,7 @@ def convert_to_unicode(text):
 
 
 def printable_text(text):
-  """Returns text encoded in a way suitable for print or `tf.logging`."""
+  """Returns text encoded in a way suitable for print or `absl.logging`."""
 
   # These functions want `str` for both Python2 and Python3, but in one case
   # it's a Unicode string and in the other it's a byte string.

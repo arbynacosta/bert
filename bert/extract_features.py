@@ -23,11 +23,12 @@ import collections
 import json
 import re
 
-import modeling
-import tokenization
+import absl
+import bert.modeling
+import bert.tokenization
 import tensorflow as tf
 
-flags = tf.flags
+flags = absl.flags
 
 FLAGS = flags.FLAGS
 
@@ -183,12 +184,12 @@ def model_fn_builder(bert_config, init_checkpoint, layer_indexes, use_tpu,
     else:
       tf.train.init_from_checkpoint(init_checkpoint, assignment_map)
 
-    tf.logging.info("**** Trainable Variables ****")
+    absl.logging.info("**** Trainable Variables ****")
     for var in tvars:
       init_string = ""
       if var.name in initialized_variable_names:
         init_string = ", *INIT_FROM_CKPT*"
-      tf.logging.info("  name = %s, shape = %s%s", var.name, var.shape,
+      absl.logging.info("  name = %s, shape = %s%s", var.name, var.shape,
                       init_string)
 
     all_layers = model.get_all_encoder_layers()
@@ -280,13 +281,13 @@ def convert_examples_to_features(examples, seq_length, tokenizer):
     assert len(input_type_ids) == seq_length
 
     if ex_index < 5:
-      tf.logging.info("*** Example ***")
-      tf.logging.info("unique_id: %s" % (example.unique_id))
-      tf.logging.info("tokens: %s" % " ".join(
+      absl.logging.info("*** Example ***")
+      absl.logging.info("unique_id: %s" % (example.unique_id))
+      absl.logging.info("tokens: %s" % " ".join(
           [tokenization.printable_text(x) for x in tokens]))
-      tf.logging.info("input_ids: %s" % " ".join([str(x) for x in input_ids]))
-      tf.logging.info("input_mask: %s" % " ".join([str(x) for x in input_mask]))
-      tf.logging.info(
+      absl.logging.info("input_ids: %s" % " ".join([str(x) for x in input_ids]))
+      absl.logging.info("input_mask: %s" % " ".join([str(x) for x in input_mask]))
+      absl.logging.info(
           "input_type_ids: %s" % " ".join([str(x) for x in input_type_ids]))
 
     features.append(
@@ -341,7 +342,7 @@ def read_examples(input_file):
 
 
 def main(_):
-  tf.logging.set_verbosity(tf.logging.INFO)
+  absl.logging.set_verbosity(absl.logging.INFO)
 
   layer_indexes = [int(x) for x in FLAGS.layers.split(",")]
 
@@ -416,4 +417,4 @@ if __name__ == "__main__":
   flags.mark_flag_as_required("bert_config_file")
   flags.mark_flag_as_required("init_checkpoint")
   flags.mark_flag_as_required("output_file")
-  tf.app.run()
+  absl.app.run(main)
