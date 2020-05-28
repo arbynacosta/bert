@@ -24,9 +24,11 @@ import json
 import re
 
 import absl
-import bert.modeling
-import bert.tokenization
 import tensorflow as tf
+
+from bert import modeling
+from bert import tokenization
+
 
 flags = absl.flags
 

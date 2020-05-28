@@ -22,9 +22,11 @@ import collections
 import csv
 import os
 import absl
-import bert.modeling
-import bert.optimization
-import bert.tokenization
+
+from bert import modeling
+from bert import optimization
+from bert import tokenization
+
 
 flags = absl.flags
 

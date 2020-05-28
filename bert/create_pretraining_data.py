@@ -21,8 +21,10 @@ from __future__ import print_function
 import collections
 import random
 import absl
-import bert.tokenization
 import tensorflow as tf
+
+from bert import tokenization
+
 
 flags = absl.flags
 
